@@ -8,6 +8,9 @@ import commons.Urls;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+
 public class UserApiTest {
 
     @Test
@@ -17,8 +20,12 @@ public class UserApiTest {
 
         Response response = util.post(Urls.urlUsers, user);
 
-        // Loga a resposta completa, incluindo status code e corpo, após a requisição
-        response.then().log().all().statusCode(201);
+        response.then().log().all()
+                .statusCode(201)
+                .body("name", equalTo(ConstantsUsers.name)) // Valida o campo 'name'
+                .body("job", equalTo(ConstantsUsers.job)) // Valida o campo 'job'
+                .body("id", notNullValue()) // Verifica se o campo 'id' está presente
+                .body("createdAt", notNullValue()); // Verifica se o campo 'createdAt' está presente
     }
 
 }
